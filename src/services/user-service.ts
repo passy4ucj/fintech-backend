@@ -39,6 +39,12 @@ export const findUser = async (
     return await prisma.user.findUnique({ where: { email } });
 };
 
+export const findUserByPhone = async (
+    phoneNumber: string
+): Promise<ReturnedUser | null> => {
+    return await prisma.user.findUnique({ where: { phoneNumber } });
+};
+
 export const getAllUserService = async () => {
     return await prisma.user.findMany({
         select: {
