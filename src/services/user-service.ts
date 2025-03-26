@@ -1,4 +1,3 @@
-import e from "express";
 import { prisma } from "../client";
 import { User } from "@prisma/client";
 
