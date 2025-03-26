@@ -7,7 +7,7 @@ export const currentUserMiddleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): void => {
 
   let token
 
@@ -18,7 +18,8 @@ export const currentUserMiddleware = (
 
   if(!token) {
     // throw new BadRequestError("Invalid email");
-    return res.status(StatusCodes.UNAUTHORIZED).json({ Message: 'Not Logged In' });
+    res.status(StatusCodes.UNAUTHORIZED).json({ Message: 'Not Logged In' });
+    return;
 }
 
   try {
@@ -29,6 +30,9 @@ export const currentUserMiddleware = (
     ) as UserPayload;
 
     req.currentUser = payload;
-  } catch (error) {}
+  } catch (error) {
+    res.status(StatusCodes.UNAUTHORIZED).json({ message: "Invalid token" });
+    return;
+  }
   next();
 };

@@ -12,7 +12,7 @@ import { findUser, findUserByIdService, findUserByPhone, getAllUserService, regi
 
 // @desc    Login Users
 // @route   POST    /api/v1/user/signin-user
-export const loginUserController = async (req: Request, res: Response) => {
+export const loginUserController = async (req: Request, res: Response): Promise<void> => {
     const { email, password } = req.body;
   
     const user = await findUser(email);
@@ -38,7 +38,7 @@ export const loginUserController = async (req: Request, res: Response) => {
     // remove password from the user object
     delete user.password;
   
-    return successResponse(res, StatusCodes.OK, {
+    successResponse(res, StatusCodes.OK, {
       user,
       token: userJWT
     });
@@ -46,25 +46,27 @@ export const loginUserController = async (req: Request, res: Response) => {
 
 // @desc    Fetches the current user
 // @route   GET   /api/v2/auth/current-user
-export const currentUser = async (req: Request, res: Response) => {
+export const currentUser = async (req: Request, res: Response): Promise<void> => {
     if (!req.currentUser) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+      res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+      return;
     }
   
     const currentUser = await findUserByIdService(req.currentUser.id)
     delete currentUser?.password;
     
-    return res
-      .status(StatusCodes.OK)
-      .json({ message: "success", currentUser });
+    successResponse(res, StatusCodes.OK, {
+        message: "success",
+        currentUser
+      });
 };
 
-export const getAllUserController = async (req: Request, res: Response) => {
+export const getAllUserController = async (req: Request, res: Response): Promise<void> => {
     const users = await getAllUserService();
-    return successResponse(res, StatusCodes.OK, users);
+    successResponse(res, StatusCodes.OK, users);
 };
 
-export const getUserController = async (req: Request, res: Response) => {
+export const getUserController = async (req: Request, res: Response): Promise<void> => {
     const { userID } = req.params;
   
     const user = await findUserByIdService(userID);
@@ -72,13 +74,13 @@ export const getUserController = async (req: Request, res: Response) => {
     if (!user) throw new NotFoundError("Invalid user ID");
   
     delete user.password;
-    return successResponse(res, StatusCodes.OK, user);
+    successResponse(res, StatusCodes.OK, user);
 };
 
 
 // @desc    Register User
 // @route   POST    /api/v2/user/create-user
-export const createUserController = async (req: Request, res: Response) => {
+export const createUserController = async (req: Request, res: Response): Promise<void> => {
     const { fullName, email, password, phoneNumber } = req.body;
   
     let user = await findUser(email);
@@ -98,5 +100,5 @@ export const createUserController = async (req: Request, res: Response) => {
   
     delete data.password
   
-    return successResponse(res, StatusCodes.CREATED, data);
+    successResponse(res, StatusCodes.CREATED, data);
 };

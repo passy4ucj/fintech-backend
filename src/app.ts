@@ -15,7 +15,7 @@ const xssClean = require("xss-clean");
 
 
 // application middleware
-// import { applicationRoutes } from "./routes";
+import { applicationRoutes } from "./routes";
 import { errorHandler, errorHandlerMiddleware, notFound } from "./middleware";
 import { StatusCodes } from "http-status-codes";
 import Logger from "./logger";
@@ -78,7 +78,7 @@ app.get("/api/v1/auth/error", (_: Request, res: Response, next: NextFunction) =>
     res.send("Authentication failed");
 });
 
-// app.use("/api/v1", applicationRoutes);
+app.use("/api/v1", applicationRoutes);
 
 
 // Use error Middleware
