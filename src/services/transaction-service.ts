@@ -137,3 +137,7 @@ export const findTransactionById = async (transactionId: string) => {
         where: { id: transactionId },
     });
 };
+
+export const findTransactions = async () => {
+    return prisma.transaction.findMany();
+};

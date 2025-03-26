@@ -7,9 +7,5 @@ export const requireAuthMiddleware = (
   next: NextFunction
 ) => {
   if (!req.currentUser) throw new UnauthorizedError();
-  if (!req.currentUser.isEnabled)
-    throw new BadRequestError("Your account is disabled");
-  if (!req.currentUser.isEmailVerified)
-    throw new BadRequestError("Please verify your account");
   next();
 };
