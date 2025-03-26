@@ -6,7 +6,7 @@ import {
   Password,
   successResponse,
 } from "../helpers";
-import { BadRequestError, ForbiddenError, NotFoundError } from "../errors";
+import { BadRequestError } from "../errors";
 import Logger from "../logger";
 import { findTransactionById, findTransactions, transferFunds } from "../services";
 

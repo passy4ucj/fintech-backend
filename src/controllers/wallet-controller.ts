@@ -1,9 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import {
-  generateJWT,
-  Password,
   successResponse,
 } from "../helpers";
 import { BadRequestError, ForbiddenError, NotFoundError } from "../errors";
@@ -11,9 +9,10 @@ import Logger from "../logger";
 import { createWallet, findUserByIdService, findWalletById, findWalletByUserId } from "../services";
 
 
-export const createWalletController = async (req: Request, res: Response) => {
+export const createWalletController = async (req: Request, res: Response): Promise<void> => {
     if (!req.currentUser) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+      res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+      return;
     }
 
     const {
@@ -34,9 +33,10 @@ export const createWalletController = async (req: Request, res: Response) => {
     successResponse(res, StatusCodes.CREATED, wallet);
 };
 
-export const getUserWalletController = async (req: Request, res: Response) => {
+export const getUserWalletController = async (req: Request, res: Response): Promise<void> => {
     if (!req.currentUser) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+      res.status(StatusCodes.UNAUTHORIZED).json({ currentUser: null });
+      return;
     }
 
     const currentUser = await findUserByIdService(req.currentUser.id);
@@ -48,7 +48,7 @@ export const getUserWalletController = async (req: Request, res: Response) => {
     successResponse(res, StatusCodes.OK, wallet);
 };
 
-export const getWalletController = async (req: Request, res: Response) => {
+export const getWalletController = async (req: Request, res: Response): Promise<void> => {
 
     const {
         walletId
