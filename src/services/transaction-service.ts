@@ -1,6 +1,7 @@
 import e from "express";
 import { prisma } from "../client";
 import { Transaction } from "@prisma/client";
+import { createAuditLog } from "./audit-log-service";
 
 export type TransactionAccount = Pick<
     Transaction,
@@ -112,6 +113,19 @@ export const transferFunds = async (
           description: `Received from wallet ${senderWalletId}`,
         },
       });
+
+      // Create Audit Logs for Both Users
+      await createAuditLog({
+        userId: senderUserId,
+        action: 'Fund Transfer (DEBIT)',
+        details: `User ${senderUserId} sent ${amount} to user ${receiverUserId}`,
+      });
+
+      await createAuditLog({
+        userId: receiverUserId,
+        action: 'Fund Transfer (CREDIT)',
+        details: `User ${receiverUserId} received ${amount} from user ${senderUserId}`
+    });
   
       return { updatedSenderWallet, updatedReceiverWallet, senderTransaction, receiverTransaction };
     });
