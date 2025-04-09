@@ -12,3 +12,7 @@ export const createAuditLog = async (data: AuditLogAccount) => {
    });
    return auditLog;
 };
+
+export const getAuditLogs = async () => {
+    return prisma.auditLog.findMany();
+};
